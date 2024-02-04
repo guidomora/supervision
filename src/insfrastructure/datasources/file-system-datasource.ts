@@ -4,7 +4,7 @@ import fs from 'fs';
 
 export class FileSysemDataSource implements LogDatasource {
     private readonly logPath= 'logs/'
-    private readonly allLogsPath= 'logs/logs-low.log'
+    private readonly allLogsPath= 'logs/logs-all.log'
     private readonly medumLogsPath= 'logs/logs-medium.log'
     private readonly highLogsPath= 'logs/logs-high.log'
 
@@ -16,10 +16,19 @@ export class FileSysemDataSource implements LogDatasource {
         if (!fs.existsSync(this.logPath)){
             fs.mkdirSync(this.logPath)
         }
+
+        [
+            this.allLogsPath,
+            this.medumLogsPath,
+            this.highLogsPath
+        ].forEach(path => {
+            if (!fs.existsSync(path)) return;
+            fs.writeFileSync(path, '')
+        })
     }
 
     saveLog(log: LogEntity): Promise<void> {
-        throw new Error("Method not implemented.");
+        fs.appendFileSync(this.allLogsPath, `${JSON.stringify(log)}\n`)
     }
     getLogs(severityLevel: LogSeverityLevel): Promise<LogEntity[]> {
         throw new Error("Method not implemented.");
