@@ -23,8 +23,8 @@ export class EmailService { // usamos nodemailer con nuestras variables de entor
         const { to, subject, htmlBody } = options
         try {
             const sentInformation = this.transporter.sendMail({
-                to,
-                subject,
+                to:to,
+                subject:subject,
                 html: htmlBody
             })
             console.log("???", sentInformation);
