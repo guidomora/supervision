@@ -5,37 +5,32 @@ import { LogRepositoryImpl } from "../insfrastructure/repositories/log.repositor
 import { FileSysemDataSource } from "../insfrastructure/datasources/file-system-datasource";
 import { envs } from "../config/plugins/envs.plugins";
 import { EmailService } from "./email/email.service";
+import { SendEmailLogs } from "../domain/use-cases/email/send-email-logs";
+import { MongoLogDataSource } from "../insfrastructure/datasources/mongo-log.datasource";
 
-const fileSystemLogRepository = new LogRepositoryImpl(
-    new FileSysemDataSource(),
+const logRepository = new LogRepositoryImpl(
+    // new FileSysemDataSource(),
+    new MongoLogDataSource(),
     // mongo
     // postgres
 );
 
-
+const emailService = new EmailService();
 
 export class Server {
     static start() { // no ponemos que es publico porque es el valor por defecto, a menos que pongamos privado
         console.log('Server started');
         console.log(envs.MAILER_SECRET_KEY, envs.MAILER_EMAIL);
 
-        const emailService = new EmailService();
-        emailService.sendEmail({
-            to: "guidomorabito161@hotmail.com",
-            subject: "logs del sistema",
-            htmlBody: `
-                <h1>Logs del sistema</h1>
-                <p> sdjhfsdjkhfskjdfhskdjhfskdjhkjsdhfksjdfhskdjhfskjdhfkjshdfkjhsdhjkfjkdshfskjh </p>
-                <p>Ver los adjuntos</p>
-                `
-        })
+        // new SendEmailLogs(emailService, fileSystemLogRepository,).execute(['guidomorabito161@hotmail.com', ])
+        // emailService.sendEmailFileWithFileSytemLogs(['guidomorabito161@hotmail.com', ])
 
         // CronService.createJob(
         //     '*/5 * * * * *',
         //     () => {
         //         // new CheckService().execute('https://www.google.com')
         //         new CheckService(
-        //             fileSystemLogRepository,
+        //             logRepository,
         //             () => console.log('Success'),
         //             (error) => console.log(error),
         //         ).execute('https://www.google.com/')
