@@ -1,8 +1,9 @@
+import { PrismaClient } from "@prisma/client";
 import { envs } from "./config/plugins/envs.plugins";
-import { MongoDatabase } from "./data/mongo/init";
+import { MongoDatabase } from "./data/mongoDB/init";
 import { Server } from "./presentation/server"
 import 'dotenv/config'
-import { LogModel } from './data/mongo/models/log.model';
+// import { LogModel } from './data/mongo/models/log.model';
 
 
 
@@ -16,7 +17,21 @@ async function main() {
         mongoUrl: envs.MONGO_URL,
         dbName: envs.MONGO_DB_NAME
     })
+    
+    // Subir un log a postgres con prisma
+    const prisma = new PrismaClient()
+    // const newLog = await prisma.logModel.create({
+    //     data: {
+    //         level:"HIGH",
+    //         message: "Hola mundo",
+    //         origin: "App.ts"
+    //     }
+    // })
 
+    // Leer logs de postgres con prisma
+    // const logs = await prisma.logModel.findMany()
+    // console.log(logs);
+    
 
     // const newLog = await LogModel.create({
     //     message: "Hola mundo",
